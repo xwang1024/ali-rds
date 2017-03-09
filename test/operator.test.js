@@ -17,13 +17,17 @@ describe('operator.test.js', function () {
       assert.equal(op._where({ id: 1, name: 'foo' }), ' WHERE `id` = 1 AND `name` = \'foo\'');
       assert.equal(op._where({ id: 1, name2: null }), ' WHERE `id` = 1 AND `name2` = NULL');
       assert.equal(op._where({ 'test.id': 1 }), ' WHERE `test`.`id` = 1');
-      assert.equal(op._where({ 'id': [1, 2], name: 'foo' }), ' WHERE `id` IN (1, 2) AND `name` = \'foo\'');
-      assert.equal(op._where({ 'id': [1], name: 'foo' }, ['id', 'name']), ' WHERE `id` IN (1) AND `name` = \'foo\'');
       // assert.equal(op.where({ 'test.id': new Date(), name: 'foo' }, 'test.id'), ' WHERE `test`.`id` = 1');
       assert.equal(op._where({ name: 'foo\'\"' }), ' WHERE `name` = \'foo\\\'\\\"\'');
       assert.equal(op._where({ id: 1, name: 'foo\'\"' }), ' WHERE `id` = 1 AND `name` = \'foo\\\'\\\"\'');
       assert.equal(op._where({ id: 1, name: 'foo\'\"', user: 'fengmk2' }),
         ' WHERE `id` = 1 AND `name` = \'foo\\\'\\\"\' AND `user` = \'fengmk2\'');
+      assert.equal(op._where({ id: { $is: null } }), ' WHERE `id` IS NULL');
+      assert.equal(op._where({ id: { $isNot: null } }), ' WHERE `id` IS NOT NULL');
+      assert.equal(op._where({ 'id': { $in: [1, 2] }, name: 'foo' }), ' WHERE `id` IN (1, 2) AND `name` = \'foo\'');
+      assert.equal(op._where({ 'id': { $in: [1] }, name: 'foo' }, ['id', 'name']), ' WHERE `id` IN (1) AND `name` = \'foo\'');
+      assert.equal(op._where({ 'id': { $notIn: [1, 2] }, name: 'foo' }), ' WHERE `id` NOT IN (1, 2) AND `name` = \'foo\'');
+      assert.equal(op._where({ 'id': { $notIn: [1] }, name: 'foo' }, ['id', 'name']), ' WHERE `id` NOT IN (1) AND `name` = \'foo\'');
     });
   });
 
